@@ -12,7 +12,7 @@ public class SunMovement : MonoBehaviour
 
     void Start()
     {
-        fixedPoint = transform.position;
+        fixedPoint = new Vector3 (0, 0, 0);
     }
 
     void Update()
