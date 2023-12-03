@@ -4,9 +4,9 @@
 Shader"Custom/Hidden Texture" { 
 Properties {
     _MainTex ("Base (RGB)", 2D) = "white" { }
-    _SpotAngle ("Spot Angle", Float) = 30.0
-    _Range ("Range", Float) = 5.0
-    _Contrast ("Contrast", Range (20.0, 80.0)) = 50.0
+    _SpotAngle ("Spot Angle", Float) = 87.2
+    _Range ("Range", Float) = 7.0
+    _Contrast ("Contrast", Range (20.0, 80.0)) = 100.0
 } 
 
 Subshader {
