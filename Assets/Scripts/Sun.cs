@@ -30,6 +30,7 @@ public class Sun : MonoBehaviour
         {
             GetComponent<Renderer>().material.SetFloat("_SpotAngle", sunLight.spotAngle);
             GetComponent<Renderer>().material.SetFloat("_Range", sunLight.range);
+            GetComponent<Renderer>().material.SetFloat("_CloudOpacity", 0.5f);
         }
     }
 }

@@ -4,9 +4,11 @@
 Shader"Custom/Hidden Texture" { 
 Properties {
     _MainTex ("Base (RGB)", 2D) = "white" { }
+    _CloudTex ("Cloud Texture", 2D) = "white" { }
     _SpotAngle ("Spot Angle", Float) = 87.2
     _Range ("Range", Float) = 7.0
     _Contrast ("Contrast", Range (20.0, 80.0)) = 100.0
+    _CloudOpacity ("Cloud Opacity", Range (0.0, 1.0)) = 0.5
 } 
 
 Subshader {
@@ -23,11 +25,13 @@ LEqual
 #include "UnityCG.cginc"
 
 uniform sampler2D _MainTex;
+uniform sampler2D _CloudTex;
 uniform float4 _LightPos; // light world position - set via script
 uniform float4 _LightDir; // light world direction - set via script
 uniform float _SpotAngle; // spotlight angle
 uniform float _Range; // spotlight range
 uniform float _Contrast; // adjusts contrast
+uniform float _CloudOpacity;
         
 struct v2f_interpolated
 {
@@ -53,9 +57,16 @@ half4 frag(v2f_interpolated i) : COLOR
     half cosLightDir = dot(normalize(i.lightDir), normalize(_LightDir)); // get light angle
     half ang = cosLightDir - cos(radians(_SpotAngle / 2)); // calculate angle factor
     half alpha = saturate(dist * ang * _Contrast); // combine distance, angle and contrast
-    half4 c = tex2D(_MainTex, i.texCoord); // get texel
-    c.a *= alpha; // combine texel and calculated alpha
-    return c;
+    
+    half4 baseColor = tex2D(_MainTex, i.texCoord); // get texel
+    half4 cloudColor = tex2D(_CloudTex, i.texCoord);
+    
+    cloudColor.a = cloudColor.r * _CloudOpacity;
+    
+    half4 finalColor = lerp(baseColor, cloudColor, cloudColor.a);
+    
+    finalColor.a *= alpha; // combine texel and calculated alpha
+    return finalColor;
 }
         ENDCG
     }    
