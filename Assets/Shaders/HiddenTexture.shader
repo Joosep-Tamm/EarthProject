@@ -7,7 +7,7 @@ Properties {
     _CloudTex ("Cloud Texture", 2D) = "white" { }
     _SpotAngle ("Spot Angle", Float) = 87.2
     _Range ("Range", Float) = 7.0
-    _Contrast ("Contrast", Range (20.0, 80.0)) = 100.0
+    _Contrast ("Contrast", Range (20.0, 80.0)) = 50
     _CloudOpacity ("Cloud Opacity", Range (0.0, 1.0)) = 0.5
 } 
 

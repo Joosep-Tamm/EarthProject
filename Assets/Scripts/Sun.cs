@@ -8,7 +8,8 @@ public class Sun : MonoBehaviour
 {
     private Transform tfLight;
     private Light sunLight;
-
+    public float CloudOpacity = 0.5f;
+    public float Contrast = 50f;
     public void Start()
     {
         var goLight = GameObject.Find("Sun");
@@ -30,7 +31,8 @@ public class Sun : MonoBehaviour
         {
             GetComponent<Renderer>().material.SetFloat("_SpotAngle", sunLight.spotAngle);
             GetComponent<Renderer>().material.SetFloat("_Range", sunLight.range);
-            GetComponent<Renderer>().material.SetFloat("_CloudOpacity", 0.5f);
+            GetComponent<Renderer>().material.SetFloat("_CloudOpacity", CloudOpacity);
+            GetComponent<Renderer>().material.SetFloat("_Contrast", Contrast);
         }
     }
 }

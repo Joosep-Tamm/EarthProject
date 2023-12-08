@@ -23,14 +23,19 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _CloudTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 67e4d780029153b48b1e041b342c8c65, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Contrast: 49.5
+    - _CloudOpacity: 0.507
+    - _Contrast: 50
     - _Range: 10
-    - _SpotAngle: 19.98
+    - _SpotAngle: 60
     m_Colors: []
   m_BuildTextureStacks: []
