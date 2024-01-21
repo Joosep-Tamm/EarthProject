@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Atmosphere
   m_EditorClassIdentifier: 
   atmosphereShader: {fileID: 4800000, guid: ac4d629f4843ee54e908f3d3c830f152, type: 3}
-  inScatteringPoints: 50
-  opticalDepthPoints: 30
-  densityFalloff: 3
+  inScatteringPoints: 10
+  opticalDepthPoints: 10
+  densityFalloff: 2
   atmosphereScale: 0.03
   wavelengths: {x: 700, y: 530, z: 460}
   scatteringStrength: 150
