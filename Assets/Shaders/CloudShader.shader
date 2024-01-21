@@ -1,53 +1,64 @@
-Shader "Custom/CloudShader"
+Shader"Custom/CloudShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _MainTex ("Cloud Texture", 2D) = "white" {}
+        _FlowMap ("FlowMap", 2D) = "white" {}
+        _Contrast ("Contrast", Range (20.0, 80.0)) = 50
+        _CloudOpacity ("Cloud Opacity", Range (0.0, 1.0)) = 0.5
+        _FlowSpeed ("Flow Speed", Float) = 0.01 // Add this line to control the speed of the cloud movement
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 200
+        Tags { "RenderType"="Transparent" "Queue"="Transparent"}
+        Pass {
+    Blend SrcAlpha
+    OneMinusSrcAlpha
+                ZTest
+    LEqual
 
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+                CGPROGRAM
+                #pragma vertex vert
+                #pragma fragment frag
+    #include "UnityCG.cginc"
 
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+    uniform sampler2D _MainTex;
+    uniform sampler2D _FlowMap;
+    uniform float _Contrast; // adjusts contrast
+    uniform float _CloudOpacity;
+    uniform float _FlowSpeed; // Added this line
 
-        sampler2D _MainTex;
+    struct v2f_interpolated
+    {
+        float4 pos : SV_POSITION;
+        float2 texCoord : TEXCOORD0;
+        float4 time : TEXCOORD1;
+    };
 
-        struct Input
-        {
-            float2 uv_MainTex;
-        };
-
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
-
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
-
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
-        }
-        ENDCG
+    v2f_interpolated vert(appdata_full v)
+    {
+        v2f_interpolated o;
+        o.texCoord.xy = v.texcoord.xy;
+        o.pos = UnityObjectToClipPos(v.vertex);
+        o.time = _Time;
+        return o;
     }
-    FallBack "Diffuse"
+
+    half4 frag(v2f_interpolated i) : COLOR
+    {
+        float2 flow = tex2D(_FlowMap, i.texCoord).rg;
+        flow = (flow * 2.0 - 1.0) * _FlowSpeed;
+
+        float modulatedTime = fmod(i.time.y, 100.0) * _FlowSpeed;
+                
+        float2 offset = flow * modulatedTime;
+        fixed4 cloudColor = tex2D(_MainTex, i.texCoord + offset);
+
+        cloudColor.a = cloudColor.r * _CloudOpacity;
+
+        return cloudColor;
+    }
+            ENDCG
+        }    
+    }
 }
